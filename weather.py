@@ -3,6 +3,7 @@
 import argparse
 import json
 import sys
+from turtle import st
 import style
 from configparser import ConfigParser
 from urllib import error, parse, request
@@ -10,6 +11,16 @@ from urllib import error, parse, request
 
 # This is the base URL that will be used in all API calls.
 BASE_WEATHER_API_URL = "http://api.openweathermap.org/data/2.5/weather"
+
+# Weather Condition Codes
+# https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
+THUNDERSTORM = range(200, 300)
+DRIZZLE = range(300, 400)
+RAIN = range(500, 600)
+SNOW = range(600, 700)
+ATMOSPHERE = range(700, 800)
+CLEAR = range(800, 801)
+CLOUDY = range(801, 900)
 
 
 def _get_api_key():
@@ -111,12 +122,39 @@ def display_weather_info(weather_data, imperial=False):
         More information at https://openweather.org/current#name
     """
     city = weather_data["name"]
+    weather_id = weather_data["weather"][0]["id"]
     weather_description = weather_data["weather"][0]["description"]
     temperature = weather_data["main"]["temp"]
     country = weather_data["sys"]["country"]
 
-    print(f"{city:^{PADDING}}", end="")
-    print(f"\t{weather_description.capitalize()}", end=" ")
+    style.change_colour(style.REVERSE)
+    print(f"{city:^{style.PADDING}}", end="")
+    style.change_colour(style.RESET)
+
+    # colour codes for different weather conditions
+
+    if weather_id in THUNDERSTORM:
+        style.change_colour(style.RED)
+    elif weather_id in DRIZZLE:
+        style.change_colour(style.CYAN)
+    elif weather_id in RAIN:
+        style.change_colour(style.BLUE)
+    elif weather_id in SNOW:
+        style.change_colour(style.WHITE)
+    elif weather_id in ATMOSPHERE:
+        style.change_colour(style.BLUE)
+    elif weather_id in CLEAR:
+        style.change_colour(style.YELLOW)
+    elif weather_id in CLOUDY:
+        style.change_colour(style.WHITE)
+    else:  # In case the API adds new weather codes
+        style.change_colour(style.RESET)
+
+    print(
+        f"\t{weather_description.capitalize():^{style.PADDING}}", end=" "
+    )
+    style.change_colour(style.RESET)
+
     print(f"({temperature}°{'F' if imperial else 'C'})")
 
 
