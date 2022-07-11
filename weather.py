@@ -3,7 +3,6 @@
 import argparse
 import json
 import sys
-from turtle import st
 import style
 from configparser import ConfigParser
 from urllib import error, parse, request
@@ -128,27 +127,12 @@ def display_weather_info(weather_data, imperial=False):
     country = weather_data["sys"]["country"]
 
     style.change_colour(style.REVERSE)
-    print(f"{city:^{style.PADDING}}", end="")
+    print(f"{city:^{style.PADDING}} {country}", end="")
     style.change_colour(style.RESET)
 
-    # colour codes for different weather conditions
+    colour = _select_weather_display_params(weather_id)
 
-    if weather_id in THUNDERSTORM:
-        style.change_colour(style.RED)
-    elif weather_id in DRIZZLE:
-        style.change_colour(style.CYAN)
-    elif weather_id in RAIN:
-        style.change_colour(style.BLUE)
-    elif weather_id in SNOW:
-        style.change_colour(style.WHITE)
-    elif weather_id in ATMOSPHERE:
-        style.change_colour(style.BLUE)
-    elif weather_id in CLEAR:
-        style.change_colour(style.YELLOW)
-    elif weather_id in CLOUDY:
-        style.change_colour(style.WHITE)
-    else:  # In case the API adds new weather codes
-        style.change_colour(style.RESET)
+    style.change_colour(colour)
 
     print(
         f"\t{weather_description.capitalize():^{style.PADDING}}", end=" "
@@ -157,6 +141,30 @@ def display_weather_info(weather_data, imperial=False):
 
     print(f"({temperature}°{'F' if imperial else 'C'})")
 
+    # colour codes for different weather conditions
+
+
+def _select_weather_display_params(weather_id):
+    if weather_id in THUNDERSTORM:
+        colour = style.RED
+    elif weather_id in DRIZZLE:
+        colour = style.CYAN
+    elif weather_id in RAIN:
+        colour = style.BLUE
+    elif weather_id in SNOW:
+        colour = style.WHITE
+    elif weather_id in ATMOSPHERE:
+        colour = style.BLUE
+    elif weather_id in CLEAR:
+        colour = style.YELLOW
+    elif weather_id in CLOUDY:
+        colour = style.WHITE
+    else:  # In case the API adds new weather codes
+        style.change_colour(style.RESET)
+    return colour
+
+
+# Main Function
 
 if __name__ == "__main__":
     user_args = read_user_cli_args()
