@@ -127,7 +127,7 @@ def display_weather_info(weather_data, imperial=False):
     country = weather_data["sys"]["country"]
 
     style.change_colour(style.REVERSE)
-    print(f"{city:^{style.PADDING}} {country}", end="")
+    print(f"{city:^{style.PADDING}}{country:^{style.PADDING}}", end="")
     style.change_colour(style.RESET)
 
     colour = _select_weather_display_params(weather_id)

@@ -1,6 +1,6 @@
 # style.py
 
-PADDING = 20
+PADDING = 8
 
 RED = "\033[1;31m"
 BLUE = "\033[1;34m"
